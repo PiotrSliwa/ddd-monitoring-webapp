@@ -25,6 +25,6 @@
     fill: #d00;
 }
 
-/* .single-day-container h3 {
-    margin-left: 55px;
-} */
+.single-day-chart .rectangle {
+    fill: #ee0;
+}

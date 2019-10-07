@@ -7,6 +7,7 @@ function LastMonthChangePolygon(props) {
     else if (props.change < 0) {
         return <polygon points="100,0 200,200 0,200" transform="translate(200,100) scale(0.1) rotate(180,100,100)" className="triangle-down" />
     }
+    return <polygon points="0,0 200,0 200,200 0,200" transform="translate(200,100) scale(0.1) rotate(180,100,100)" className="rectangle" />
 }
 
 function RoundChart(props) {
@@ -30,7 +31,7 @@ class SingleDayChart extends React.Component {
             show: false,
             total: {
                 percent: 0,
-                lastMonthChange: 1
+                lastMonthChange: 0
             },
             locations: []
         }
