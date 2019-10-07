@@ -23,7 +23,7 @@ function RoundChart(props) {
     )
 }
 
-class Availability extends React.Component {
+class SingleDayChart extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -98,6 +98,3 @@ class Availability extends React.Component {
         )
     }
 }
-
-const domContainer = document.querySelector('#single_day_charts');
-ReactDOM.render(<Availability date="2019-05-03" />, domContainer);
