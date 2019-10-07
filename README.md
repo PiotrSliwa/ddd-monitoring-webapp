@@ -1,7 +1,8 @@
 # Activity monitoring
 
-This is a simple web application for monitoring activities logged in a CSV file. Its back-end is built on top of Spring Framework
-(in accordance to the DDD paradigm) and the front-end on React.js. 
+This is a responsive web application for monitoring business data with a simple security built with Bootstrap, Spring and React. 
+
+![screenshot](screenshot.png)
 
 ## Building
 
