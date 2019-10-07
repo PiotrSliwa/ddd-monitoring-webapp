@@ -1,0 +1,30 @@
+.single-day-chart path {
+    will-change: auto;
+    stroke-width: 20px;
+    stroke-miterlimit: round;
+}
+
+.single-day-chart text.percentage {
+    font-size: 35px;
+}
+
+.single-day-chart text.description {
+    font-size: 15px;
+    fill: #aaa;
+}
+
+.single-day-chart text.last-month-change {
+    font-size: 15px;
+}
+
+.single-day-chart .triangle-up {
+    fill: #0d0;
+}
+
+.single-day-chart .triangle-down {
+    fill: #d00;
+}
+
+/* .single-day-container h3 {
+    margin-left: 55px;
+} */
