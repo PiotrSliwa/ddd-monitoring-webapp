@@ -1,11 +1,13 @@
 class DayByDayChart extends React.Component {
     constructor(props) {
         super(props)
+        this.getLookBackDate = this.getLookBackDate.bind(this)
+        this.container = React.createRef()
     }
 
     componentDidMount() {
 
-        const { beginning, end } = this.props;
+        const that = this
 
         fetch('http://localhost:8080/presentation/dayByDay', {
             method: 'POST',
@@ -13,7 +15,10 @@ class DayByDayChart extends React.Component {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ beginning, end })
+            body: JSON.stringify({ 
+                beginning: that.getLookBackDate(),
+                end: that.props.date
+            })
         })
         .then(response => response.json())
         .then(data => {
@@ -21,7 +26,7 @@ class DayByDayChart extends React.Component {
                 animationEnabled: true,
                 theme: "light2",
                 title:{
-                    text: `Last ${this.getNumberOfDays()} Days`
+                    text: `Last ${this.props.lookBackDays} Days`
                 },
                 axisY:{
                     includeZero: false
@@ -29,29 +34,30 @@ class DayByDayChart extends React.Component {
                 data: [{        
                     type: "line",       
                     dataPoints: data.dayByDayAvailabilities.map(a => {
-                        return {y: a.value}
+                        return {y: a ? a.value : null}
                     })
                 }]
             });
-            chart.render();
+            chart.render()
         })
         .catch(() => {
-            this.document.querySelector('#day_by_day_chart').innerHTML = `
-                <h2 class="text-center">Last ${this.getNumberOfDays()} Days</h2>
+            that.container.current.innerHTML = `
+                <h2 class="text-center">Last ${this.props.lookBackDays} Days</h2>
                 <h6 class="text-center">You are not allowed to see this chart</h6>
             `;
         })
     }
 
-    getNumberOfDays() {
-        const end = new Date(this.props.end)
-        const beginning = new Date(this.props.beginning)
-        return (end - beginning) / 86400000
+    getLookBackDate() {
+        const withLeadingZero = num => `${num < 10 ? '0' : ''}${num}`
+        const end = new Date(this.props.date)
+        const lookBackDate = new Date(end - this.props.lookBackDays * 24 * 3600 * 1000)
+        return `${lookBackDate.getFullYear()}-${withLeadingZero(lookBackDate.getMonth() + 1)}-${withLeadingZero(lookBackDate.getDate())}`
     }
 
     render() {
         return (
-            <div id="day_by_day_chart" style={{height: '370px', width: '100%'}}></div>
+            <div id="day_by_day_chart" ref={this.container} style={{height: '370px', width: '100%'}}></div>
         )
     }
 }
