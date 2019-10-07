@@ -13,8 +13,8 @@ mvn verify
 
 ## Running
 
-You need JDK12 and Maven to run this application. Additionally, put `dummy.csv` with the monitoring data into the current directory
-before running the application.
+You need JDK12 and Maven to run this application. In the project root directory, there is an `application.properies` configuration
+file and a `dummy.csv` containing a test data source that will be used by the application if it's run from the directory. 
 
 In order to run the application, type
 
