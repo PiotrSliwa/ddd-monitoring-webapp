@@ -1,16 +1,16 @@
 'use strict';
 
 class Wallboard extends React.Component {
+
+    state = {
+        date: this.props.date,
+        lookBackDays: 6
+    }
+
     constructor(props) {
         super(props)
-        
         this.changeDay = this.changeDay.bind(this)
         this.changeRange = this.changeRange.bind(this)
-        
-        this.state = {
-            date: this.props.date,
-            lookBackDays: 6
-        }
     }
 
     changeDay(byDays) {
@@ -47,7 +47,7 @@ class Wallboard extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-lg">
-                        <SingleDayChart date={this.state.date} />
+                        <SingleDayChart key={this.state.date} date={this.state.date} />
                     </div>
                     <div className="col-lg">
                         <DayByDayChart date={this.state.date} lookBackDays={this.state.lookBackDays} />

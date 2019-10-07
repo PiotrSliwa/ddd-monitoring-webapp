@@ -12,36 +12,37 @@ function LastMonthChangePolygon(props) {
 
 function RoundChart(props) {
     const dashoffset = 350 * (100 - props.percent) / 100;
+    const roomStatistics = props.roomStatistics ? `${props.roomStatistics.qtyRoomsIssues} issues in ${props.roomStatistics.qtyRooms} rooms` : ''
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" className="single-day-chart" width="400" height="200" viewBox="0 0 400 200" data-value="40">
+        <svg xmlns="http://www.w3.org/2000/svg" className="single-day-chart" width="400" height="200" viewBox="0 0 400 200">
             <path className="bg" stroke="#ccc" d="M41 149.5a77 77 0 1 1 117.93 0"  fill="none"/>
             <path className="meter" stroke={props.color} d="M41 149.5a77 77 0 1 1 117.93 0" fill="none" strokeDasharray="350" strokeDashoffset={dashoffset} />
             <text x="50%" y="45%" dominantBaseline="middle" textAnchor="middle" className="percentage" transform="translate(-100,0)">{props.percent}%</text>
             <text x="50%" y="60%" dominantBaseline="middle" textAnchor="middle" className="description" transform="translate(-100,0)">Availability</text>
             <LastMonthChangePolygon change={props.lastMonthChange} />
             <text x="56%" y="58%" className="last-month-change">{props.lastMonthChange}% Last Month</text>
+            <text x="50%" y="68%" className="details">{roomStatistics}</text>
         </svg>
     )
 }
 
 class SingleDayChart extends React.Component {
+
+    state = {
+        show: false,
+        total: {
+            percent: 0,
+            lastMonthChange: 0
+        },
+        locations: []
+    }
+
     constructor(props) {
         super(props)
-        this.state = {
-            show: false,
-            total: {
-                percent: 0,
-                lastMonthChange: 0
-            },
-            locations: []
-        }
+        this.getLocationCharts = this.getLocationCharts.bind(this)
     }
 
     componentDidMount() {
-        this.fetchData()
-    }
-
-    componentDidUpdate() {
         this.fetchData()
     }
 
@@ -68,11 +69,28 @@ class SingleDayChart extends React.Component {
                     return {
                         name: e[0],
                         percent: e[1].index.value,
-                        lastMonthChange: e[1].lastMonthDifference.difference.value
+                        lastMonthChange: e[1].lastMonthDifference.difference.value,
+                        roomStatistics: {
+                            qtyRooms: e[1].roomStatistics.quantityOfRooms,
+                            qtyRoomsIssues: e[1].roomStatistics.quantityOfRoomIssues
+                        }
                     }
                 })
             })
         })
+    }
+
+    getLocationCharts() {
+        return this.state.locations.map((location) => 
+            <div key={location.name} className={`row align-items-center`}>
+                <div className="col">
+                    <h6 className="text-right">{location.name}</h6>
+                </div>
+                <div className="col">
+                    <RoundChart percent={location.percent} lastMonthChange={location.lastMonthChange} roomStatistics={location.roomStatistics} color="#0dd" />
+                </div>
+            </div>
+        )
     }
 
     render() {
@@ -84,16 +102,6 @@ class SingleDayChart extends React.Component {
                 </div>
             )
         }
-        const locationCharts = this.state.locations.map((location) => 
-            <div key={location.name} className={`row align-items-center`}>
-                <div className="col">
-                    <h6 className="text-right">{location.name}</h6>
-                </div>
-                <div className="col">
-                    <RoundChart percent={location.percent} lastMonthChange={location.lastMonthChange} color="#0dd" />
-                </div>
-            </div>
-        )
         return (
             <div className={`single-day-container`}>
                 <h2 className="text-center">Today</h2>
@@ -102,7 +110,7 @@ class SingleDayChart extends React.Component {
                         <RoundChart percent={this.state.total.percent} lastMonthChange={this.state.total.lastMonthChange} color="#09c" />
                     </div>
                 </div>
-                {locationCharts}
+                {this.getLocationCharts()}
             </div>
         )
     }

@@ -17,6 +17,10 @@
     font-size: 15px;
 }
 
+.single-day-chart text.details {
+    font-size: 12px;
+}
+
 .single-day-chart .triangle-up {
     fill: #0d0;
 }
