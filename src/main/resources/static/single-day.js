@@ -38,6 +38,14 @@ class SingleDayChart extends React.Component {
     }
 
     componentDidMount() {
+        this.fetchData()
+    }
+
+    componentDidUpdate() {
+        this.fetchData()
+    }
+
+    fetchData() {
         const date = this.props.date;
         const that = this;
         fetch('http://localhost:8080/presentation/singleDay', {

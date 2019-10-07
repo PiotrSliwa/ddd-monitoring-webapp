@@ -6,7 +6,14 @@ class DayByDayChart extends React.Component {
     }
 
     componentDidMount() {
+        this.fetchData()
+    }
 
+    componentDidUpdate() {
+        this.fetchData()
+    }
+
+    fetchData() {
         const that = this
 
         fetch('http://localhost:8080/presentation/dayByDay', {
@@ -49,10 +56,9 @@ class DayByDayChart extends React.Component {
     }
 
     getLookBackDate() {
-        const withLeadingZero = num => `${num < 10 ? '0' : ''}${num}`
         const end = new Date(this.props.date)
         const lookBackDate = new Date(end - this.props.lookBackDays * 24 * 3600 * 1000)
-        return `${lookBackDate.getFullYear()}-${withLeadingZero(lookBackDate.getMonth() + 1)}-${withLeadingZero(lookBackDate.getDate())}`
+        return normalizedDate(lookBackDate)
     }
 
     render() {
