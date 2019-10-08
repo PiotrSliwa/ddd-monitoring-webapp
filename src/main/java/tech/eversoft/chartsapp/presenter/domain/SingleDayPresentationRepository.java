@@ -52,13 +52,12 @@ public class SingleDayPresentationRepository {
     private static Map<Location, DayAvailability> groupByLocation(List<Availability> availabilities) {
         var listsGroupedByLocation = new HashMap<Location, List<Availability>>();
         for (var availability : availabilities) {
-            var locationAvailabilities = listsGroupedByLocation.computeIfAbsent(availability.getLocation(), l -> new ArrayList<>());
+            var locationAvailabilities = listsGroupedByLocation.computeIfAbsent(availability.getLocation(),
+                                                                                l -> new ArrayList<>());
             locationAvailabilities.add(availability);
         }
-        var result = new HashMap<Location, DayAvailability>();
-        for (var e : listsGroupedByLocation.entrySet()) {
-            result.put(e.getKey(), collectAveraged(e.getValue()));
-        }
-        return result;
+        return listsGroupedByLocation.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                                          e -> collectAveraged(e.getValue())));
     }
 }
