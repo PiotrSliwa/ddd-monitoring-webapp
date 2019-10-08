@@ -17,6 +17,9 @@ class DayByDayPresentationRepositoryTest extends Specification {
         def cut = new DayByDayPresentationRepository(availabilityRepository: availabilityRepository)
 
         and:
+        def companyName = 'CompanyName'
+
+        and:
         def now = LocalDateTime.of(2020, Month.SEPTEMBER, 15, 10, 14)
         def threeDaysAgo = LocalDateTime.of(2020, Month.SEPTEMBER, 12, 10, 14)
         def midnightThreeDaysAgo = LocalDateTime.of(2020, Month.SEPTEMBER, 12, 0, 0)
@@ -38,10 +41,10 @@ class DayByDayPresentationRepositoryTest extends Specification {
         ]
 
         when:
-        def result = cut.findByCompanyNameEqualAndDateBetween(threeDaysAgo, now)
+        def result = cut.findByCompanyNameEqualAndDateBetween(companyName, threeDaysAgo, now)
 
         then:
-        1 * availabilityRepository.findByDataDateBetween(midnightThreeDaysAgo, now) >> availabilities
+        1 * availabilityRepository.findByCompanyNameEqualAndDataDateBetween(companyName, midnightThreeDaysAgo, now) >> availabilities
 
         and:
         result.dayByDayAvailabilities == [

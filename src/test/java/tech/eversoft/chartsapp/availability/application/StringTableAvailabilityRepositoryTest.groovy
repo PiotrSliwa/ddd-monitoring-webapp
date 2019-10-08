@@ -15,12 +15,15 @@ import java.time.Month
 class StringTableAvailabilityRepositoryTest extends Specification {
     def "FindByDataDateBetween"() {
         given:
+        def searchedCompanyName = 'COMPANY_X'
+
+        and:
         def stringTable = new StringTable([
                 new StringRow([AVAILABILITY_ID              : '1',
                                DATA_DATE_ID                 : '10',
                                DATA_DATE                    : '5/1/19 0:00',
                                COMPANY_ID                   : '1',
-                               COMPANY_NAME                 : 'X',
+                               COMPANY_NAME                 : searchedCompanyName,
                                LOCATION_ID                  : '1',
                                LOCATION_NAME                : 'L1',
                                AVAILABILITY_INDEX           : '76',
@@ -31,7 +34,7 @@ class StringTableAvailabilityRepositoryTest extends Specification {
                                DATA_DATE_ID                 : '20',
                                DATA_DATE                    : '5/2/19 0:01',
                                COMPANY_ID                   : '2',
-                               COMPANY_NAME                 : 'Y',
+                               COMPANY_NAME                 : searchedCompanyName,
                                LOCATION_ID                  : '2',
                                LOCATION_NAME                : 'L2',
                                AVAILABILITY_INDEX           : '11',
@@ -39,10 +42,21 @@ class StringTableAvailabilityRepositoryTest extends Specification {
                                QTY_ROOM_ISSUES              : '2',
                                LAST_MONTH_AVAILABILITY_INDEX: '3']),
                 new StringRow([AVAILABILITY_ID              : '3',
+                               DATA_DATE_ID                 : '20',
+                               DATA_DATE                    : '5/2/19 0:01',
+                               COMPANY_ID                   : '3',
+                               COMPANY_NAME                 : 'SOME_OTHER_COMPANY_NAME',
+                               LOCATION_ID                  : '2',
+                               LOCATION_NAME                : 'L2',
+                               AVAILABILITY_INDEX           : '11',
+                               QTY_ROOMS                    : '12',
+                               QTY_ROOM_ISSUES              : '72',
+                               LAST_MONTH_AVAILABILITY_INDEX: '30']),
+                new StringRow([AVAILABILITY_ID              : '4',
                                DATA_DATE_ID                 : '30',
                                DATA_DATE                    : '5/2/19 4:59',
                                COMPANY_ID                   : '3',
-                               COMPANY_NAME                 : 'Z',
+                               COMPANY_NAME                 : searchedCompanyName,
                                LOCATION_ID                  : '3',
                                LOCATION_NAME                : 'L3',
                                AVAILABILITY_INDEX           : '13',
@@ -53,7 +67,10 @@ class StringTableAvailabilityRepositoryTest extends Specification {
         def cut = new StringTableAvailabilityRepository(stringTable)
 
         when:
-        def result = cut.findByDataDateBetween(LocalDateTime.of(2019, Month.MAY, 2, 0, 0), LocalDateTime.of(2019, Month.MAY, 2, 5, 0))
+        def result = cut.findByCompanyNameEqualAndDataDateBetween(
+                'COMPANY_X',
+                LocalDateTime.of(2019, Month.MAY, 2, 0, 0),
+                LocalDateTime.of(2019, Month.MAY, 2, 5, 0))
 
         then:
         result.size() == 2
@@ -66,7 +83,7 @@ class StringTableAvailabilityRepositoryTest extends Specification {
             roomStatistics == new RoomStatistics(1, 2)
         }
         verifyAll(result[1]) {
-            id == new AvailabilityId(3)
+            id == new AvailabilityId(4)
             date == new DataDate(new DataDateId(30), LocalDateTime.of(2019, Month.MAY, 2, 4, 59))
             location == new Location(new LocationId(3), 'L3')
             currentIndex == new AvailabilityIndex(13)

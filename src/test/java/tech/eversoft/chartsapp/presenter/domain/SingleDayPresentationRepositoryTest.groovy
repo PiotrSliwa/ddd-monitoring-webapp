@@ -13,6 +13,9 @@ class SingleDayPresentationRepositoryTest extends Specification {
         def cut = new SingleDayPresentationRepository(availabilityRepository: availabilityRepository)
 
         and:
+        def companyName = 'CompanyName'
+
+        and:
         def now = LocalDateTime.of(2020, Month.SEPTEMBER, 15, 10, 14)
         def midnightToday = LocalDateTime.of(2020, Month.SEPTEMBER, 15, 0, 0)
 
@@ -52,10 +55,10 @@ class SingleDayPresentationRepositoryTest extends Specification {
         ]
 
         when:
-        def result = cut.findByCompanyNameAndDate(now)
+        def result = cut.findByCompanyNameAndDate(companyName, now)
 
         then:
-        1 * availabilityRepository.findByDataDateBetween(midnightToday, now) >> availabilities
+        1 * availabilityRepository.findByCompanyNameEqualAndDataDateBetween(companyName, midnightToday, now) >> availabilities
 
         and:
         verifyAll(result.total) {
