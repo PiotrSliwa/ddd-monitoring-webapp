@@ -22,12 +22,12 @@ public class SingleDayPresentationRepository {
     public SingleDayPresentation findByCompanyNameAndDate(String companyName, LocalDateTime dateTime) {
         var dayTimeMidnight = dateTime.truncatedTo(ChronoUnit.DAYS);
         var availabilities = availabilityRepository.findByCompanyNameEqualAndDataDateBetween(companyName, dayTimeMidnight, dateTime);
-        var total = collect(availabilities);
+        var total = collectAveraged(availabilities);
         var locationAvailabilities = groupByLocation(availabilities);
         return new SingleDayPresentation(total, locationAvailabilities);
     }
 
-    private static DayAvailability collect(List<Availability> availabilities) {
+    private static DayAvailability collectAveraged(List<Availability> availabilities) {
         var index = new AvailabilityIndex(average(availabilities, a -> a.getCurrentIndex().getValue()));
         var lastMonthIndex = new AvailabilityIndex(average(availabilities, a -> a.getLastMonthIndex().getValue()));
         var lastMonthDifference = new AvailabilityDifference(lastMonthIndex, index);
@@ -57,7 +57,7 @@ public class SingleDayPresentationRepository {
         }
         var result = new HashMap<Location, DayAvailability>();
         for (var e : listsGroupedByLocation.entrySet()) {
-            result.put(e.getKey(), collect(e.getValue()));
+            result.put(e.getKey(), collectAveraged(e.getValue()));
         }
         return result;
     }
