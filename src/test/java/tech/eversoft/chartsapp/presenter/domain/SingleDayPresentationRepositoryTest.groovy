@@ -6,11 +6,11 @@ import tech.eversoft.chartsapp.availability.domain.*
 import java.time.LocalDateTime
 import java.time.Month
 
-class SingleDayPresentationFactoryTest extends Specification {
+class SingleDayPresentationRepositoryTest extends Specification {
     def "Create"() {
         given:
         def availabilityRepository = Mock(AvailabilityRepository)
-        def cut = new SingleDayPresentationFactory(availabilityRepository: availabilityRepository)
+        def cut = new SingleDayPresentationRepository(availabilityRepository: availabilityRepository)
 
         and:
         def now = LocalDateTime.of(2020, Month.SEPTEMBER, 15, 10, 14)
@@ -52,7 +52,7 @@ class SingleDayPresentationFactoryTest extends Specification {
         ]
 
         when:
-        def result = cut.create(now)
+        def result = cut.findByCompanyNameAndDate(now)
 
         then:
         1 * availabilityRepository.findByDataDateBetween(midnightToday, now) >> availabilities

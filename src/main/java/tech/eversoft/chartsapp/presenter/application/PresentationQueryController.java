@@ -5,17 +5,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import tech.eversoft.chartsapp.presenter.domain.DayByDayPresentation;
-import tech.eversoft.chartsapp.presenter.domain.DayByDayPresentationFactory;
+import tech.eversoft.chartsapp.presenter.domain.DayByDayPresentationRepository;
 import tech.eversoft.chartsapp.presenter.domain.SingleDayPresentation;
-import tech.eversoft.chartsapp.presenter.domain.SingleDayPresentationFactory;
+import tech.eversoft.chartsapp.presenter.domain.SingleDayPresentationRepository;
 
 @RestController
 public class PresentationQueryController {
     @Autowired
-    private DayByDayPresentationFactory dayByDayPresentationFactory;
+    private DayByDayPresentationRepository dayByDayPresentationRepository;
 
     @Autowired
-    private SingleDayPresentationFactory singleDayPresentationFactory;
+    private SingleDayPresentationRepository singleDayPresentationRepository;
 
     @Autowired
     private CompanyNameFromAuthenticationResolver resolver;
@@ -26,9 +26,9 @@ public class PresentationQueryController {
     public DayByDayPresentation getDayByDayPresentation(@RequestBody TimeframeQuery timeframeQuery,
                                                         Authentication authentication) {
         var companyName = resolver.resolveCompanyName(authentication);
-        return dayByDayPresentationFactory.create(companyName,
-                                                  timeframeQuery.getBeginning().atStartOfDay(),
-                                                  timeframeQuery.getEnd().atStartOfDay());
+        return dayByDayPresentationRepository.findByCompanyNameEqualAndDateBetween(companyName,
+                                                                                   timeframeQuery.getBeginning().atStartOfDay(),
+                                                                                   timeframeQuery.getEnd().atStartOfDay());
     }
 
     @PreAuthorize("hasAuthority('SINGLE_DAY_VIEWER')")
@@ -36,8 +36,8 @@ public class PresentationQueryController {
     @PostMapping("/presentation/singleDay")
     public SingleDayPresentation singleDayPresentation(@RequestBody DateQuery dateQuery, Authentication authentication) {
         var companyName = resolver.resolveCompanyName(authentication);
-        return singleDayPresentationFactory.create(companyName,
-                                                   dateQuery.getDate().atStartOfDay());
+        return singleDayPresentationRepository.findByCompanyNameAndDate(companyName,
+                                                                        dateQuery.getDate().atStartOfDay());
     }
 
 }

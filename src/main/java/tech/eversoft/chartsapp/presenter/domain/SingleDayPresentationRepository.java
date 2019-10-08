@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class SingleDayPresentationFactory {
+public class SingleDayPresentationRepository {
     @NonNull private AvailabilityRepository availabilityRepository;
 
-    public SingleDayPresentation create(String companyName, LocalDateTime dateTime) {
+    public SingleDayPresentation findByCompanyNameAndDate(String companyName, LocalDateTime dateTime) {
         var dayTimeMidnight = dateTime.truncatedTo(ChronoUnit.DAYS);
         var availabilities = availabilityRepository.findByCompanyNameEqualAndDataDateBetween(companyName, dayTimeMidnight, dateTime);
         var total = collect(availabilities);

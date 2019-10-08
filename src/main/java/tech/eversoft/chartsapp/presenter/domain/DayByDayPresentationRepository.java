@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class DayByDayPresentationFactory {
+public class DayByDayPresentationRepository {
     @NonNull private AvailabilityRepository availabilityRepository;
 
-    public DayByDayPresentation create(String companyName, LocalDateTime beginning, LocalDateTime end) {
+    public DayByDayPresentation findByCompanyNameEqualAndDateBetween(String companyName, LocalDateTime beginning, LocalDateTime end) {
         var beginningMidnight = beginning.truncatedTo(ChronoUnit.DAYS);
         var availabilities = availabilityRepository.findByCompanyNameEqualAndDataDateBetween(companyName, beginningMidnight, end);
         var indexesGroupedByDay = new HashMap<LocalDateTime, List<AvailabilityIndex>>();
