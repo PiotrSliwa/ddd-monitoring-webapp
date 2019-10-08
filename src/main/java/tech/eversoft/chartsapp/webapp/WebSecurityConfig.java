@@ -3,6 +3,7 @@ package tech.eversoft.chartsapp.webapp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,13 +14,14 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/presentation/dayByDay").hasRole("DAY_BY_DAY_VIEWER")
-                .antMatchers("/presentation/singleDay").hasRole("SINGLE_DAY_VIEWER")
+//                .antMatchers("/presentation/dayByDay").hasRole("DAY_BY_DAY_VIEWER")
+//                .antMatchers("/presentation/singleDay").hasRole("SINGLE_DAY_VIEWER")
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
@@ -34,27 +36,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        var userA =
-             User.withDefaultPasswordEncoder()
-                .username("userA")
-                .password("password")
-                .roles("SINGLE_DAY_VIEWER")
-                .build();
-
-        var userB =
+        return new InMemoryUserDetailsManager(
                 User.withDefaultPasswordEncoder()
-                        .username("userB")
-                        .password("password")
-                        .roles("DAY_BY_DAY_VIEWER")
-                        .build();
-
-        var userC =
+                        .username("userXA")
+                        .password("pass")
+                        .authorities("SINGLE_DAY_VIEWER", "ACCESS_COMPANY_X")
+                        .build(),
                 User.withDefaultPasswordEncoder()
-                        .username("userC")
-                        .password("password")
-                        .roles("SINGLE_DAY_VIEWER", "DAY_BY_DAY_VIEWER")
-                        .build();
-
-        return new InMemoryUserDetailsManager(userA, userB, userC);
+                        .username("userXB")
+                        .password("pass")
+                        .authorities("DAY_BY_DAY_VIEWER", "ACCESS_COMPANY_X")
+                        .build(),
+                User.withDefaultPasswordEncoder()
+                        .username("userXC")
+                        .password("pass")
+                        .authorities("SINGLE_DAY_VIEWER", "DAY_BY_DAY_VIEWER", "ACCESS_COMPANY_X")
+                        .build(),
+                User.withDefaultPasswordEncoder()
+                        .username("userYA")
+                        .password("pass")
+                        .authorities("SINGLE_DAY_VIEWER", "ACCESS_COMPANY_Y")
+                        .build(),
+                User.withDefaultPasswordEncoder()
+                        .username("userYB")
+                        .password("pass")
+                        .authorities("DAY_BY_DAY_VIEWER", "ACCESS_COMPANY_Y")
+                        .build(),
+                User.withDefaultPasswordEncoder()
+                        .username("userYC")
+                        .password("pass")
+                        .authorities("SINGLE_DAY_VIEWER", "DAY_BY_DAY_VIEWER", "ACCESS_COMPANY_Y")
+                        .build());
     }
 }

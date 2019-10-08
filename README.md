@@ -1,6 +1,6 @@
 # Activity monitoring
 
-This is a responsive web application for monitoring business data with a simple security built with Bootstrap, Spring and React. 
+This is a responsive web application for monitoring business data with a security built with Bootstrap, Spring and React. 
 
 ![screenshot](screenshot.png)
 
@@ -25,7 +25,12 @@ mvn spring-boot:run
 
 The application will be accessible via `http://localhost:8080/`.
 
-There are three users (all identifiable by `password` password):
-* `userA` - with an access to the "Today" chart
-* `userB` - with an access to the "Last 6 days" chart
-* `userC` - with an access to both charts
+There are 6 test users (all identifiable by password `pass`):
+* `userXA` - with an access to the "Today" chart of COMPANY_X's data
+* `userXB` - with an access to the "Last N Days" chart of COMPANY_X's data
+* `userXC` - with an access to both charts of COMPANY_X's data
+* `userYA` - with an access to the "Today" chart of COMPANY_Y's data
+* `userYB` - with an access to the "Last N Days" chart of COMPANY_Y's data
+* `userYC` - with an access to both charts of COMPANY_Y's data
+
+ Note: See: `dummy.csv` for test company names.

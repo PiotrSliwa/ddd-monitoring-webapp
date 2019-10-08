@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 public class DayByDayPresentationFactory {
     @NonNull private AvailabilityRepository availabilityRepository;
 
-    public DayByDayPresentation create(LocalDateTime beginning, LocalDateTime end) {
+    public DayByDayPresentation create(String companyName, LocalDateTime beginning, LocalDateTime end) {
         var beginningMidnight = beginning.truncatedTo(ChronoUnit.DAYS);
-        var availabilities = availabilityRepository.findByDataDateBetween(beginningMidnight, end);
+        var availabilities = availabilityRepository.findByCompanyNameEqualAndDataDateBetween(companyName, beginningMidnight, end);
         var indexesGroupedByDay = new HashMap<LocalDateTime, List<AvailabilityIndex>>();
         for (var availability : availabilities) {
             var dayGroup = indexesGroupedByDay.computeIfAbsent(availability.getDate().getDateTime().truncatedTo(ChronoUnit.DAYS),

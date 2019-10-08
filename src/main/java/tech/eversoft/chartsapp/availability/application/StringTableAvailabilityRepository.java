@@ -22,9 +22,10 @@ public class StringTableAvailabilityRepository implements AvailabilityRepository
     private StringTable stringTable;
 
     @Override
-    public List<Availability> findByDataDateBetween(LocalDateTime min, LocalDateTime max) {
+    public List<Availability> findByCompanyNameEqualAndDataDateBetween(String companyName, LocalDateTime min, LocalDateTime max) {
         return stringTable.getRows().stream()
                 .map(StringRow::getFieldValues)
+                .filter(v -> v.get("COMPANY_NAME").equals(companyName))
                 .filter(v -> isBetween(v.get("DATA_DATE"), min, max))
                 .map(this::parseAvailability)
                 .collect(Collectors.toList());

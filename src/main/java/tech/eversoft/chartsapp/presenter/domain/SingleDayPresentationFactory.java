@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 public class SingleDayPresentationFactory {
     @NonNull private AvailabilityRepository availabilityRepository;
 
-    public SingleDayPresentation create(LocalDateTime dateTime) {
+    public SingleDayPresentation create(String companyName, LocalDateTime dateTime) {
         var dayTimeMidnight = dateTime.truncatedTo(ChronoUnit.DAYS);
-        var availabilities = availabilityRepository.findByDataDateBetween(dayTimeMidnight, dateTime);
+        var availabilities = availabilityRepository.findByCompanyNameEqualAndDataDateBetween(companyName, dayTimeMidnight, dateTime);
         var total = collect(availabilities);
         var locationAvailabilities = groupByLocation(availabilities);
         return new SingleDayPresentation(total, locationAvailabilities);
