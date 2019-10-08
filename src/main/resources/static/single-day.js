@@ -49,7 +49,7 @@ class SingleDayChart extends React.Component {
     fetchData() {
         const date = this.props.date;
         const that = this;
-        fetch('http://localhost:8080/presentation/singleDay', {
+        fetch('/presentation/singleDay', {
             method: 'POST',
             mode: 'cors',
             headers: {

@@ -16,7 +16,7 @@ class DayByDayChart extends React.Component {
     fetchData() {
         const that = this
 
-        fetch('http://localhost:8080/presentation/dayByDay', {
+        fetch('/presentation/dayByDay', {
             method: 'POST',
             mode: 'cors',
             headers: {
